@@ -10,7 +10,7 @@ namespace Making_More_Classes
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         List<Texture2D> booTextures;
-
+        Texture2D hauntedBackgroundTexture;
 
 
         public Game1()
@@ -23,7 +23,7 @@ namespace Making_More_Classes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            booTextures = new List<Texture2D>();
             base.Initialize();
         }
 
@@ -32,6 +32,11 @@ namespace Making_More_Classes
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            hauntedBackgroundTexture = Content.Load<Texture2D>("Images/haunted background");
+            booTextures.Add(Content.Load<Texture2D>("Images/boo-stopped"));
+            for (int i = 1; i <= 8; i++)
+                booTextures.Add(Content.Load<Texture2D>("Images/boo-move-" + i));
+
         }
 
         protected override void Update(GameTime gameTime)
