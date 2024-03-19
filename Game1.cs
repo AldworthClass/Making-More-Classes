@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Making_More_Classes
 {
+  
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -54,6 +55,11 @@ namespace Making_More_Classes
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(hauntedBackgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
