@@ -6,18 +6,26 @@ using System.Collections.Generic;
 
 namespace Making_More_Classes
 {
-  
+    enum Screen
+    {
+        Title,
+        House,
+        End
+    }
     public class Game1 : Game
     {
-
         Random generator;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         List<Texture2D> booTextures;
         Texture2D hauntedBackgroundTexture;
+        Texture2D titleTexture;
+        Texture2D endTexture;
+
+        Screen screen;
 
         MouseState mouseState;
-
+        KeyboardState KeyboardState;
 
         List<Ghost> ghosts;
 
@@ -31,6 +39,7 @@ namespace Making_More_Classes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            screen = Screen.Title;
             generator = new Random();
             booTextures = new List<Texture2D>();
             ghosts = new List<Ghost>();
@@ -44,8 +53,11 @@ namespace Making_More_Classes
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            hauntedBackgroundTexture = Content.Load<Texture2D>("Images/haunted background");
+            hauntedBackgroundTexture = Content.Load<Texture2D>("Images/haunted-background");
+            titleTexture = Content.Load<Texture2D>("Images/haunted-title");
+            endTexture = Content.Load<Texture2D>("Images/haunted-end-screen");
             booTextures.Add(Content.Load<Texture2D>("Images/boo-stopped"));
+            
             for (int i = 1; i <= 8; i++)
                 booTextures.Add(Content.Load<Texture2D>("Images/boo-move-" + i));
 
@@ -54,15 +66,26 @@ namespace Making_More_Classes
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
+            KeyboardState = Keyboard.GetState();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
-
-            // TODO: Add your update logic here
-            foreach (Ghost ghost in ghosts)
-                ghost.Update(gameTime, mouseState);
-
+            if (screen == Screen.Title)
+            {
+                if (KeyboardState.IsKeyDown(Keys.Enter))
+                    screen = Screen.House;
+            }
+            else if (screen == Screen.House)
+            {
+                foreach (Ghost ghost in ghosts)
+                {
+                    ghost.Update(gameTime, mouseState);
+                    if (ghost.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed)
+                        screen = Screen.End;
+                }
+            } 
+           
             base.Update(gameTime);
         }
 
@@ -73,9 +96,16 @@ namespace Making_More_Classes
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(hauntedBackgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
-            foreach (Ghost ghost in ghosts)
-                ghost.Draw(_spriteBatch);
+            if (screen == Screen.Title)
+                _spriteBatch.Draw(titleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+            else if (screen == Screen.House)
+            {
+                _spriteBatch.Draw(hauntedBackgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+                foreach (Ghost ghost in ghosts)
+                    ghost.Draw(_spriteBatch);
+            }
+            else
+                _spriteBatch.Draw(endTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
 
             _spriteBatch.End();
 

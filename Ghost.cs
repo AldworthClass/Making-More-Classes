@@ -80,6 +80,11 @@ namespace Making_More_Classes
 
         }
 
+        public bool Contains(Point player)
+        {
+            return _location.Contains(player);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_textures[_textureIndex], _location, null, Color.White * _opacity, 0f, Vector2.Zero, _direction, 1);
