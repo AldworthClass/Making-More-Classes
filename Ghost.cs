@@ -11,14 +11,14 @@ namespace Making_More_Classes
 {
     public class Ghost
     {
-        List<Texture2D> _textures;
-        int _textureIndex;
-        Vector2 _speed;
-        Rectangle _location;
-        SpriteEffects _direction;
-        float _animationSpeed;
-        float _seconds;
-        float _opacity;
+        private List<Texture2D> _textures;
+        private int _textureIndex;
+        private Vector2 _speed;
+        private Rectangle _location;
+        private SpriteEffects _direction;
+        private float _animationSpeed;
+        private float _seconds;
+        private float _opacity;
 
 
         public Ghost(List<Texture2D> textures, Rectangle location)
@@ -30,6 +30,7 @@ namespace Making_More_Classes
             _direction = SpriteEffects.None;
             _opacity = 1f;
             _animationSpeed = 0.2f;
+            _seconds = 0;
         }
 
         public void Update(GameTime gameTime ,MouseState mouseState)
@@ -83,6 +84,11 @@ namespace Making_More_Classes
         public bool Contains(Point player)
         {
             return _location.Contains(player);
+        }
+
+        public bool Intersects(Rectangle player)
+        {
+            return _location.Intersects(player);
         }
 
         public void Draw(SpriteBatch spriteBatch)

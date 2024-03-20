@@ -21,11 +21,13 @@ namespace Making_More_Classes
         Texture2D hauntedBackgroundTexture;
         Texture2D titleTexture;
         Texture2D endTexture;
+        Texture2D marioTexture;
+        Rectangle marioRect;
 
         Screen screen;
 
         MouseState mouseState;
-        KeyboardState KeyboardState;
+        KeyboardState keyboardState;
 
         List<Ghost> ghosts;
 
@@ -43,7 +45,9 @@ namespace Making_More_Classes
             generator = new Random();
             booTextures = new List<Texture2D>();
             ghosts = new List<Ghost>();
+            marioRect = new Rectangle(0, 0, 30, 30);
             base.Initialize();
+            this.IsMouseVisible = false;
             for (int i = 0; i < 20; i++)
                 ghosts.Add(new Ghost(booTextures, new Rectangle(generator.Next(500), generator.Next(500), 40, 40)));
         }
@@ -57,7 +61,9 @@ namespace Making_More_Classes
             titleTexture = Content.Load<Texture2D>("Images/haunted-title");
             endTexture = Content.Load<Texture2D>("Images/haunted-end-screen");
             booTextures.Add(Content.Load<Texture2D>("Images/boo-stopped"));
-            
+            marioTexture = Content.Load<Texture2D>("Images/mario");
+
+
             for (int i = 1; i <= 8; i++)
                 booTextures.Add(Content.Load<Texture2D>("Images/boo-move-" + i));
 
@@ -66,14 +72,15 @@ namespace Making_More_Classes
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
-            KeyboardState = Keyboard.GetState();
+            keyboardState = Keyboard.GetState();
+            marioRect.Location = mouseState.Position;
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             if (screen == Screen.Title)
             {
-                if (KeyboardState.IsKeyDown(Keys.Enter))
+                if (keyboardState.IsKeyDown(Keys.Enter))
                     screen = Screen.House;
             }
             else if (screen == Screen.House)
@@ -81,7 +88,7 @@ namespace Making_More_Classes
                 foreach (Ghost ghost in ghosts)
                 {
                     ghost.Update(gameTime, mouseState);
-                    if (ghost.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed)
+                    if (ghost.Intersects(marioRect) && mouseState.LeftButton == ButtonState.Pressed)
                         screen = Screen.End;
                 }
             } 
@@ -96,6 +103,7 @@ namespace Making_More_Classes
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
+
             if (screen == Screen.Title)
                 _spriteBatch.Draw(titleTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
             else if (screen == Screen.House)
@@ -106,6 +114,8 @@ namespace Making_More_Classes
             }
             else
                 _spriteBatch.Draw(endTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+
+            _spriteBatch.Draw(marioTexture, marioRect, Color.White);
 
             _spriteBatch.End();
 
