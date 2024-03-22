@@ -47,7 +47,6 @@ namespace Making_More_Classes
             {
                 _direction = SpriteEffects.None;
                 _speed.X = 1f;
-
             }     
 
             // Calculates vertical speed
@@ -62,7 +61,7 @@ namespace Making_More_Classes
                 _speed = Vector2.Zero; // Sets speed to zero if mouse not clicked
                 _textureIndex = 0;
                 _seconds = 0f;
-                _opacity = 0.5f;
+                _opacity = 0.3f;
             }
             else if (_speed != Vector2.Zero) // Ghost is moving
             {
@@ -79,6 +78,11 @@ namespace Making_More_Classes
             
             _location.Offset(_speed);
 
+        }
+
+        public Rectangle Rect
+        {
+             get { return _location; } 
         }
 
         public bool Contains(Point player)
